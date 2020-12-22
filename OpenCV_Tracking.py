@@ -67,9 +67,9 @@ while Scene1Cap.isOpened():
         Scene2x = 14-(Scene2x/100)
         Scene2y = Scene2y/100
         #Delete above
-        Point1 = ax.scatter([0], [Scene1y], [Scene1x], color="g", s=25)
-        Point2 = ax.scatter([Scene2x], [Scene2y], [0], color="r", s=25)
-        Point3 = ax.scatter([Scene2x], [Scene2y], [Scene1x], color="b", s=25)
+        Point1 = ax.scatter(0, Scene1y, Scene1x, color="g", s=25)
+        Point2 = ax.scatter(Scene2x, Scene2y, 0, color="r", s=25)
+        Point3 = ax.scatter(Scene2x, ((Scene1y+Scene2y)/2), Scene1x, color="b", s=25)
     #----------------Scene Display----------------
     Scene1Frame1 = Scene1Frame2
     ret, Scene1Frame2 = Scene1Cap.read()
