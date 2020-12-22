@@ -4,12 +4,13 @@ Created on Sun Dec 20 19:45:56 2020
 
 @author: Angus
 """
+import os 
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 
-Scene1Cap = cv2.VideoCapture("C:/Users/Angus/Downloads/opencv/sources/samples/data/slowdot.mov")
-Scene2Cap = cv2.VideoCapture("C:/Users/Angus/Downloads/opencv/sources/samples/data/slowdotrev.mov")
+Scene1Cap = cv2.VideoCapture(os.getcwd()+"/TrainingData/slowdot.mov")
+Scene2Cap = cv2.VideoCapture(os.getcwd()+"/TrainingData/slowdotrev.mov")
 
 ret, Scene1Frame1 = Scene1Cap.read()
 ret, Scene1Frame2 = Scene1Cap.read()
