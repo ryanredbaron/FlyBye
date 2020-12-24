@@ -4,7 +4,7 @@ Created on Sun Dec 20 19:45:56 2020
 
 @author: Angus
 """
-import os 
+
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
@@ -16,7 +16,7 @@ Scene1Cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('M','J','P','G'))
 Scene1Cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
 Scene1Cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
-Scene2Cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+Scene2Cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
 Scene2Cap.set(cv2.CAP_PROP_FPS, 30.0)
 Scene2Cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('m','j','p','g'))
 Scene2Cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('M','J','P','G'))
@@ -60,7 +60,7 @@ while Scene1Cap.isOpened():
 
     #----------------Scene Frame Marking----------------
     for Scene1Contour in Scene1Contours:
-        if cv2.contourArea(Scene1Contour) < 100 or cv2.contourArea(Scene1Contour) > 500:
+        if cv2.contourArea(Scene1Contour) < 100 or cv2.contourArea(Scene1Contour) > 1000:
             continue
         (Scene1x, Scene1y, Scene1w, Scene1w) = cv2.boundingRect(Scene1Contour)
         Point1.remove()
@@ -69,7 +69,7 @@ while Scene1Cap.isOpened():
         cv2.putText(Scene1Frame1, str(int(Scene1x))+","+str(int(Scene1y)), (Scene1x, Scene1y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
 
     for Scene2Contour in Scene2Contours:
-        if cv2.contourArea(Scene2Contour) < 100 or cv2.contourArea(Scene2Contour) > 500:
+        if cv2.contourArea(Scene2Contour) < 100 or cv2.contourArea(Scene2Contour) > 1000:
             continue
         (Scene2x, Scene2y, Scene2w, Scene2w) = cv2.boundingRect(Scene2Contour)
         Point2.remove()
@@ -94,7 +94,6 @@ while Scene1Cap.isOpened():
     ret, Scene1Frame2 = Scene1Cap.read()
     Scene2Frame1 = Scene2Frame2
     ret, Scene2Frame2 = Scene2Cap.read()
-    
     
     Scene1Kill = cv2.waitKey(1) & 0xff
     if Scene1Kill == 27 :
