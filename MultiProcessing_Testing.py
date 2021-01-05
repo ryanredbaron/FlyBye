@@ -6,6 +6,18 @@ Created on Wed Dec 23 20:22:39 2020
 """
 import cv2
 from multiprocessing import Process
+import matplotlib.pyplot as plt
+import numpy as np
+
+x, y, z = np.indices((15, 15, 15))
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+ax.scatter([0], [0], [0], color="k", s=1)
+ax.scatter([1080], [1080], [1080], color="k", s=1)
+
+Point1 = ax.scatter([0], [0], [0], color="b", s=25)
+Point2 = ax.scatter([0], [0], [0], color="b", s=25)
+Point3 = ax.scatter([0], [0], [0], color="b", s=25)
 
 def Scene1_Video():
     Scene1Cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
@@ -30,8 +42,8 @@ def Scene1_Video():
             if cv2.contourArea(Scene1Contour) < 100 or cv2.contourArea(Scene1Contour) > 1000:
                 continue
             (Scene1x, Scene1y, Scene1w, Scene1w) = cv2.boundingRect(Scene1Contour)
-            #Graph Stuff
-            #Graph Stuff
+            Point1.remove()
+            Point1 = ax.scatter(0, Scene1y, Scene1x, color="g", s=25)
             cv2.rectangle(Scene1Frame1, (Scene1x, Scene1y), (Scene1x+Scene1w, Scene1y+Scene1w), (0, 255, 0), 2)
             cv2.putText(Scene1Frame1, str(int(Scene1x))+","+str(int(Scene1y)), (Scene1x, Scene1y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
             
@@ -72,8 +84,8 @@ def Scene2_Video():
             if cv2.contourArea(Scene2Contour) < 100 or cv2.contourArea(Scene2Contour) > 1000:
                 continue
             (Scene2x, Scene2y, Scene2w, Scene2w) = cv2.boundingRect(Scene2Contour)
-            #Graph Stuff
-            #Graph Stuff
+            Point2.remove()
+            Point2 = ax.scatter(0, Scene1y, Scene1x, color="g", s=25)
             cv2.rectangle(Scene2Frame1, (Scene2x, Scene2y), (Scene2x+Scene2w, Scene2y+Scene2w), (0, 255, 0), 2)
             cv2.putText(Scene2Frame1, str(int(Scene2x))+","+str(int(Scene2y)), (Scene2x, Scene2y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
             
@@ -99,3 +111,4 @@ if __name__ == '__main__':
 
     p1.join()
     p2.join()
+    plt.draw()
