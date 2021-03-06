@@ -6,18 +6,6 @@ Created on Wed Dec 23 20:22:39 2020
 """
 import cv2
 from multiprocessing import Process
-import matplotlib.pyplot as plt
-import numpy as np
-
-x, y, z = np.indices((15, 15, 15))
-fig = plt.figure()
-ax = fig.gca(projection='3d')
-ax.scatter([0], [0], [0], color="k", s=1)
-ax.scatter([1080], [1080], [1080], color="k", s=1)
-
-Point1 = ax.scatter([0], [0], [0], color="b", s=25)
-Point2 = ax.scatter([0], [0], [0], color="b", s=25)
-Point3 = ax.scatter([0], [0], [0], color="b", s=25)
 
 def Scene1_Video():
     Scene1Cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
@@ -38,12 +26,17 @@ def Scene1_Video():
         Scene1Dilated = cv2.dilate(Scene1Thresh, None, iterations=3)
         Scene1Contours, Scene1_ = cv2.findContours(Scene1Dilated, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         
+        (PrevScene1x, PrevScene1y, PrevScene1w, PrevScene1w) = (0,0,0,0)
+        
         for Scene1Contour in Scene1Contours:
+            #---------Filtering---------
             if cv2.contourArea(Scene1Contour) < 100 or cv2.contourArea(Scene1Contour) > 1000:
                 continue
             (Scene1x, Scene1y, Scene1w, Scene1w) = cv2.boundingRect(Scene1Contour)
-            Point1.remove()
-            Point1 = ax.scatter(0, Scene1y, Scene1x, color="g", s=25)
+            if Scene1x < (PrevScene1x + 500) and Scene1y < (PrevScene1y + 500):
+                continue
+            #---------Framing---------
+            (PrevScene1x, PrevScene1y, PrevScene1w, PrevScene1w) = cv2.boundingRect(Scene1Contour)
             cv2.rectangle(Scene1Frame1, (Scene1x, Scene1y), (Scene1x+Scene1w, Scene1y+Scene1w), (0, 255, 0), 2)
             cv2.putText(Scene1Frame1, str(int(Scene1x))+","+str(int(Scene1y)), (Scene1x, Scene1y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
             
@@ -61,7 +54,7 @@ def Scene1_Video():
             break
 
 
-def Scene2_Video(): 
+def Scene2_Video():
     Scene2Cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
     Scene2Cap.set(cv2.CAP_PROP_FPS, 30.0)
     Scene2Cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('m','j','p','g'))
@@ -80,15 +73,19 @@ def Scene2_Video():
         Scene2Dilated = cv2.dilate(Scene2Thresh, None, iterations=3)
         Scene2Contours, Scene2_ = cv2.findContours(Scene2Dilated, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         
+        (PrevScene2x, PrevScene2y, PrevScene2w, PrevScene2w) = (0,0,0,0)
         for Scene2Contour in Scene2Contours:
+            #---------Filtering---------
             if cv2.contourArea(Scene2Contour) < 100 or cv2.contourArea(Scene2Contour) > 1000:
                 continue
             (Scene2x, Scene2y, Scene2w, Scene2w) = cv2.boundingRect(Scene2Contour)
-            Point2.remove()
-            Point2 = ax.scatter(0, Scene1y, Scene1x, color="g", s=25)
+            if Scene2x < (PrevScene2x + 500) and Scene2y < (PrevScene2y + 500):
+                continue
+            #---------Framing---------
+            (PrevScene2x, PrevScene2y, PrevScene2w, PrevScene2w) = cv2.boundingRect(Scene2Contour)
             cv2.rectangle(Scene2Frame1, (Scene2x, Scene2y), (Scene2x+Scene2w, Scene2y+Scene2w), (0, 255, 0), 2)
             cv2.putText(Scene2Frame1, str(int(Scene2x))+","+str(int(Scene2y)), (Scene2x, Scene2y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
-            
+        
         cv2.namedWindow("Scene2Feed",cv2.WINDOW_NORMAL)
         cv2.resizeWindow("Scene2Feed", 960,540)
         cv2.imshow("Scene2Feed", Scene2Frame1)
@@ -106,9 +103,9 @@ def Scene2_Video():
 if __name__ == '__main__':
     p1= Process(target = Scene1_Video)
     p2= Process(target = Scene2_Video)
-    p1.start() 
+    
+    p1.start()
     p2.start()
-
+    
     p1.join()
     p2.join()
-    plt.draw()
